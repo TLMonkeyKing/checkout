@@ -3,8 +3,7 @@ package tests
 import (
 	"testing"
 	"toml/checkout/src/checkout"
-	"toml/checkout/src/item"
-	"toml/checkout/src/itemsinstore"
+	test_builder "toml/checkout/test/builder"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -18,34 +17,7 @@ type CheckoutTestSuite struct {
 func (suite *CheckoutTestSuite) SetupTest() {
 	checkout := checkout.Checkout{}
 
-	store := itemsinstore.ItemsInStore{}
-
-	store.AddItem(item.Item{
-		SKU:   "A",
-		Price: 50,
-		Discount: &item.Discount{
-			Price:  130,
-			Amount: 3,
-		},
-	})
-	store.AddItem(item.Item{
-		SKU:   "B",
-		Price: 30,
-		Discount: &item.Discount{
-			Price:  45,
-			Amount: 2,
-		},
-	})
-	store.AddItem(item.Item{
-		SKU:   "C",
-		Price: 20,
-	})
-	store.AddItem(item.Item{
-		SKU:   "D",
-		Price: 15,
-	})
-	checkout.WithItemStore(&store)
-
+	checkout.WithItemStore(test_builder.TestCheckoutConfiguration())
 	suite.Checkout = &checkout
 }
 
