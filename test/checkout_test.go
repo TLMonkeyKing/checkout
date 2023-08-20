@@ -3,6 +3,8 @@ package tests
 import (
 	"testing"
 	"toml/checkout/src/checkout"
+	"toml/checkout/src/item"
+	"toml/checkout/src/itemsinstore"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -10,11 +12,41 @@ import (
 
 type CheckoutTestSuite struct {
 	suite.Suite
-	Checkout checkout.Checkout
+	Checkout checkout.ICheckout
 }
 
 func (suite *CheckoutTestSuite) SetupTest() {
-	suite.Checkout = checkout.Checkout{}
+	checkout := checkout.Checkout{}
+
+	store := itemsinstore.ItemsInStore{}
+
+	store.AddItem(item.Item{
+		SKU:   "A",
+		Price: 50,
+		Discount: &item.Discount{
+			Price:  130,
+			Amount: 3,
+		},
+	})
+	store.AddItem(item.Item{
+		SKU:   "B",
+		Price: 30,
+		Discount: &item.Discount{
+			Price:  45,
+			Amount: 2,
+		},
+	})
+	store.AddItem(item.Item{
+		SKU:   "C",
+		Price: 20,
+	})
+	store.AddItem(item.Item{
+		SKU:   "D",
+		Price: 15,
+	})
+	checkout.WithItemStore(&store)
+
+	suite.Checkout = &checkout
 }
 
 func (suite *CheckoutTestSuite) Test_EmptyBasketPriceIsZero() {
