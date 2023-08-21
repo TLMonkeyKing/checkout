@@ -4,8 +4,8 @@ This is my implementation of the checkout kata
 Contained is a go struct "Checkout" which implements the given interface:
 ```
 type ICheckout interface {
-	Scan(item string)
-	GetTotalPrice() int
+	Scan(item string) error
+	GetTotalPrice() (int, error)
 }
 ```
 
