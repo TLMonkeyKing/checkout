@@ -1,8 +1,7 @@
-package tests
+package item
 
 import (
 	"testing"
-	_item "toml/checkout/src/item"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -16,7 +15,7 @@ func (suite *ItemTestSuite) SetupTest() {
 }
 
 func (suite *ItemTestSuite) Test_ItemSKUOK() {
-	item := _item.Item{
+	item := Item{
 		SKU:   "Test",
 		Price: 12,
 	}
@@ -25,7 +24,7 @@ func (suite *ItemTestSuite) Test_ItemSKUOK() {
 }
 
 func (suite *ItemTestSuite) Test_ItemPriceOK() {
-	item := _item.Item{
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
 	}
@@ -34,7 +33,7 @@ func (suite *ItemTestSuite) Test_ItemPriceOK() {
 }
 
 func (suite *ItemTestSuite) Test_ItemWithoutDiscount_HasDiscountAvailable_ReturnsFalse() {
-	item := _item.Item{
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
 	}
@@ -42,8 +41,8 @@ func (suite *ItemTestSuite) Test_ItemWithoutDiscount_HasDiscountAvailable_Return
 	assert.Equal(suite.T(), false, item.HasDiscountAvailable())
 }
 
-func (suite *ItemTestSuite) Test_ItemWithoutDiscount_GetDiscount_ReturnsError() {
-	item := _item.Item{
+func (suite *ItemTestSuite) Test_ItemWithoutDiscount_GetDiscountAmount_ReturnsError() {
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
 	}
@@ -52,11 +51,21 @@ func (suite *ItemTestSuite) Test_ItemWithoutDiscount_GetDiscount_ReturnsError() 
 	assert.Error(suite.T(), err)
 }
 
-func (suite *ItemTestSuite) Test_ItemWithDiscount_HasDiscountAvailable_ReturnsTrue() {
-	item := _item.Item{
+func (suite *ItemTestSuite) Test_ItemWithoutDiscount_GetDiscountPrice_ReturnsError() {
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
-		Discount: &_item.Discount{
+	}
+
+	_, err := item.GetDiscountPrice()
+	assert.Error(suite.T(), err)
+}
+
+func (suite *ItemTestSuite) Test_ItemWithDiscount_HasDiscountAvailable_ReturnsTrue() {
+	item := Item{
+		SKU:   "Test",
+		Price: 42,
+		Discount: &Discount{
 			Price:  24,
 			Amount: 3,
 		},
@@ -66,10 +75,10 @@ func (suite *ItemTestSuite) Test_ItemWithDiscount_HasDiscountAvailable_ReturnsTr
 }
 
 func (suite *ItemTestSuite) Test_ItemWithDiscount_GetDiscountAmountOK() {
-	item := _item.Item{
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
-		Discount: &_item.Discount{
+		Discount: &Discount{
 			Price:  24,
 			Amount: 3,
 		},
@@ -81,10 +90,10 @@ func (suite *ItemTestSuite) Test_ItemWithDiscount_GetDiscountAmountOK() {
 }
 
 func (suite *ItemTestSuite) Test_ItemWithDiscount_GetDiscountPriceOK() {
-	item := _item.Item{
+	item := Item{
 		SKU:   "Test",
 		Price: 42,
-		Discount: &_item.Discount{
+		Discount: &Discount{
 			Price:  24,
 			Amount: 3,
 		},

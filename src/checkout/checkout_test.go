@@ -1,8 +1,7 @@
-package tests
+package checkout
 
 import (
 	"testing"
-	"toml/checkout/src/checkout"
 	test_builder "toml/checkout/test/builder"
 
 	"github.com/stretchr/testify/assert"
@@ -11,11 +10,11 @@ import (
 
 type CheckoutTestSuite struct {
 	suite.Suite
-	Checkout checkout.ICheckout
+	Checkout ICheckout
 }
 
 func (suite *CheckoutTestSuite) SetupTest() {
-	checkout := checkout.Checkout{}
+	checkout := Checkout{}
 
 	checkout.WithItemStore(test_builder.TestCheckoutConfiguration())
 	suite.Checkout = &checkout
@@ -208,7 +207,7 @@ func (suite *CheckoutTestSuite) Test_ItemScannedThatDoesntExist() {
 
 func (suite *CheckoutTestSuite) Test_CheckoutWithEmptyStock() {
 	// Given we create a new checkout and don't give it a stock
-	checkout := checkout.Checkout{}
+	checkout := Checkout{}
 
 	// When we scan an item
 	err := checkout.Scan("A")

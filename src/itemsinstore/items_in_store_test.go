@@ -1,9 +1,8 @@
-package tests
+package itemsinstore
 
 import (
 	"testing"
 	_item "toml/checkout/src/item"
-	"toml/checkout/src/itemsinstore"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -17,14 +16,14 @@ func (suite *ItemsInStoreTestSuite) SetupTest() {
 }
 
 func (suite *ItemsInStoreTestSuite) Test_ItemsInStore_GetNonexistentItem_ReturnsError() {
-	items := itemsinstore.ItemsInStore{}
+	items := ItemsInStore{}
 	_, err := items.GetItem("Test")
 
 	assert.Error(suite.T(), err)
 }
 
 func (suite *ItemsInStoreTestSuite) Test_ItemsInStore_AddAndGetItemOK() {
-	items := itemsinstore.ItemsInStore{}
+	items := ItemsInStore{}
 
 	itemToAdd := _item.Item{
 		SKU:   "Test",
