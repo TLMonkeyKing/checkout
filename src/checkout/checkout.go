@@ -11,15 +11,30 @@ type Checkout struct {
 	items        []string
 }
 
-func (c *Checkout) Scan(item string) {
+func (c *Checkout) Scan(item string) error {
+	if c.itemsInStore == nil {
+		return fmt.Errorf("Checkout is missing stock")
+	}
+
+	// Ensure item is in stock before adding it
+	_, err := c.itemsInStore.GetItem(item)
+	if err != nil {
+		return err
+	}
+
 	c.items = append(c.items, item)
+	return nil
 }
 
 func (c *Checkout) WithItemStore(store itemsinstore.IItemsInStore) {
 	c.itemsInStore = store
 }
 
-func (c *Checkout) GetTotalPrice() int {
+func (c *Checkout) GetTotalPrice() (int, error) {
+	if c.itemsInStore == nil {
+		return 0, fmt.Errorf("Checkout is missing stock")
+	}
+
 	total := 0
 
 	// Determine counts of items in item list
@@ -38,7 +53,7 @@ func (c *Checkout) GetTotalPrice() int {
 		itemInStore, err := c.itemsInStore.GetItem(key)
 
 		if err != nil {
-			// We have scanned an erroneous item - ignore it
+			// An erroneous item has ended up in our cart - ignore it
 			continue
 		}
 
@@ -63,11 +78,11 @@ func (c *Checkout) GetTotalPrice() int {
 		if discounts > 0 {
 			price, err := itemInStore.GetDiscountPrice()
 			if err != nil {
-				fmt.Println("Warning: Error redeeming item discount")
+				return 0, err
 			}
 			total += discounts * price
 		}
 	}
 
-	return total
+	return total, nil
 }

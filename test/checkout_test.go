@@ -22,12 +22,18 @@ func (suite *CheckoutTestSuite) SetupTest() {
 }
 
 func (suite *CheckoutTestSuite) Test_EmptyBasketPriceIsZero() {
-	assert.Equal(suite.T(), 0, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 0, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemAPrices50() {
-	suite.Checkout.Scan("A")
-	assert.Equal(suite.T(), 50, suite.Checkout.GetTotalPrice())
+	err := suite.Checkout.Scan("A")
+	assert.NoError(suite.T(), err)
+
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 50, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemADiscountPrices130() {
@@ -37,7 +43,9 @@ func (suite *CheckoutTestSuite) Test_ItemADiscountPrices130() {
 	}
 
 	// Three As gives us a discount
-	assert.Equal(suite.T(), 130, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 130, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemADiscountAppliesMultipleTimes() {
@@ -47,7 +55,9 @@ func (suite *CheckoutTestSuite) Test_ItemADiscountAppliesMultipleTimes() {
 	}
 
 	// We should get two discounts
-	assert.Equal(suite.T(), 260, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 260, total)
 }
 
 func (suite *CheckoutTestSuite) Test_LotsOfItemA() {
@@ -57,12 +67,18 @@ func (suite *CheckoutTestSuite) Test_LotsOfItemA() {
 	}
 
 	// We should get two discounts, and two individual prices
-	assert.Equal(suite.T(), 360, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 360, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemBPrices30() {
-	suite.Checkout.Scan("B")
-	assert.Equal(suite.T(), 30, suite.Checkout.GetTotalPrice())
+	err := suite.Checkout.Scan("B")
+	assert.NoError(suite.T(), err)
+
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 30, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemBDiscountPrices45() {
@@ -72,7 +88,9 @@ func (suite *CheckoutTestSuite) Test_ItemBDiscountPrices45() {
 	}
 
 	// Two Bs gives us a discount
-	assert.Equal(suite.T(), 45, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 45, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemBDiscountAppliesMultipleTimes() {
@@ -82,7 +100,9 @@ func (suite *CheckoutTestSuite) Test_ItemBDiscountAppliesMultipleTimes() {
 	}
 
 	// We should get two discounts
-	assert.Equal(suite.T(), 90, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 90, total)
 }
 
 func (suite *CheckoutTestSuite) Test_LotsOfItemB() {
@@ -92,12 +112,18 @@ func (suite *CheckoutTestSuite) Test_LotsOfItemB() {
 	}
 
 	// We should get two discounts, and one individual price
-	assert.Equal(suite.T(), 120, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 120, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemCPrices20() {
-	suite.Checkout.Scan("C")
-	assert.Equal(suite.T(), 20, suite.Checkout.GetTotalPrice())
+	err := suite.Checkout.Scan("C")
+	assert.NoError(suite.T(), err)
+
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 20, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemCHasNoDiscount() {
@@ -107,12 +133,18 @@ func (suite *CheckoutTestSuite) Test_ItemCHasNoDiscount() {
 	}
 
 	// No discount applied; instead we get 4 individual prices
-	assert.Equal(suite.T(), 80, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 80, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemDPrices15() {
-	suite.Checkout.Scan("D")
-	assert.Equal(suite.T(), 15, suite.Checkout.GetTotalPrice())
+	err := suite.Checkout.Scan("D")
+	assert.NoError(suite.T(), err)
+
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 15, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemDHasNoDiscount() {
@@ -122,7 +154,9 @@ func (suite *CheckoutTestSuite) Test_ItemDHasNoDiscount() {
 	}
 
 	// No discount applied; instead we get 4 individual prices
-	assert.Equal(suite.T(), 60, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 60, total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemDiscountsApplyBetweenItems() {
@@ -148,7 +182,9 @@ func (suite *CheckoutTestSuite) Test_ItemDiscountsApplyBetweenItems() {
 	// THREE Bs - one discount, one individual: 75
 	// FOUR Cs - no discounts: 40
 	// FIVE Ds - no discounts: 75
-	assert.Equal(suite.T(), (260 + 75 + 40 + 75), suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), (260 + 75 + 40 + 75), total)
 }
 
 func (suite *CheckoutTestSuite) Test_ItemScannedThatDoesntExist() {
@@ -159,15 +195,26 @@ func (suite *CheckoutTestSuite) Test_ItemScannedThatDoesntExist() {
 	suite.Checkout.Scan("D")
 
 	expectedTotal := (50 + 30 + 20 + 15)
-	assert.Equal(suite.T(), expectedTotal, suite.Checkout.GetTotalPrice())
+	total, err := suite.Checkout.GetTotalPrice()
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), expectedTotal, total)
 
 	// When we scan an item not in store
-	suite.Checkout.Scan("E")
+	err = suite.Checkout.Scan("E")
 
-	// Then this does not affect the total, and the checkout continues as normal
-	assert.Equal(suite.T(), expectedTotal, suite.Checkout.GetTotalPrice())
-	suite.Checkout.Scan("D")
-	assert.Equal(suite.T(), expectedTotal+15, suite.Checkout.GetTotalPrice())
+	// Then we get an error
+	assert.Error(suite.T(), err)
+}
+
+func (suite *CheckoutTestSuite) Test_CheckoutWithEmptyStock() {
+	// Given we create a new checkout and don't give it a stock
+	checkout := checkout.Checkout{}
+
+	// When we scan an item
+	err := checkout.Scan("A")
+
+	// Then we get an error
+	assert.Error(suite.T(), err)
 }
 
 func TestCheckoutSuite(t *testing.T) {
