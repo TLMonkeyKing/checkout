@@ -151,6 +151,25 @@ func (suite *CheckoutTestSuite) Test_ItemDiscountsApplyBetweenItems() {
 	assert.Equal(suite.T(), (260 + 75 + 40 + 75), suite.Checkout.GetTotalPrice())
 }
 
+func (suite *CheckoutTestSuite) Test_ItemScannedThatDoesntExist() {
+	// Given we scan A, B, C and D and have a running total
+	suite.Checkout.Scan("A")
+	suite.Checkout.Scan("B")
+	suite.Checkout.Scan("C")
+	suite.Checkout.Scan("D")
+
+	expectedTotal := (50 + 30 + 20 + 15)
+	assert.Equal(suite.T(), expectedTotal, suite.Checkout.GetTotalPrice())
+
+	// When we scan an item not in store
+	suite.Checkout.Scan("E")
+
+	// Then this does not affect the total, and the checkout continues as normal
+	assert.Equal(suite.T(), expectedTotal, suite.Checkout.GetTotalPrice())
+	suite.Checkout.Scan("D")
+	assert.Equal(suite.T(), expectedTotal+15, suite.Checkout.GetTotalPrice())
+}
+
 func TestCheckoutSuite(t *testing.T) {
 	suite.Run(t, new(CheckoutTestSuite))
 }
